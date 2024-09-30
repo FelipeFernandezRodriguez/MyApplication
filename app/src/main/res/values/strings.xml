@@ -51,4 +51,9 @@
     <string name="last_name">Last Name</string>
     <string name="first_name">First Name</string>
     <string name="confirm_password">Confirm Password</string>
+    <string name="forget_password">¿Forget password?</string>
+    <string name="delete">Delete</string>
+    <string name="change_password">Change Password</string>
+    <string name="confirm_new_password">Confirm New Password</string>
+    <string name="update">Update</string>
 </resources>

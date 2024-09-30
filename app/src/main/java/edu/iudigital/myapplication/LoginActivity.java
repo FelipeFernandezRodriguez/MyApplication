@@ -2,13 +2,14 @@ package edu.iudigital.myapplication;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+
+import java.util.List;
 
 
 public class LoginActivity extends AppCompatActivity {
@@ -23,21 +24,37 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        loginEmail = findViewById(R.id.loginEmail);
-        loginPassword = findViewById(R.id.loginPassword);
-        buttonLogin = findViewById(R.id.buttonLogin);
-        buttonRegister = findViewById(R.id.buttonRegister);
+        loginEmail = findViewById(R.id.txtLoginEmail);
+        loginPassword = findViewById(R.id.txtLoginPassword);
+        buttonLogin = findViewById(R.id.btnLogin);
+        buttonRegister = findViewById(R.id.btnRegister);
 
         buttonLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String username = loginEmail.getText().toString();
+                String email = loginEmail.getText().toString();
                 String password = loginPassword.getText().toString();
 
-                if (username.isEmpty() || password.isEmpty()) {
-                    Toast.makeText(LoginActivity.this, "Por favor, completa todos los campos", Toast.LENGTH_SHORT).show();
+                if (email.isEmpty() || password.isEmpty()) {
+                    Toast.makeText(LoginActivity.this, "Please fill in all the fields", Toast.LENGTH_SHORT).show();
                 } else {
-                    Toast.makeText(LoginActivity.this, "Login exitoso", Toast.LENGTH_SHORT).show();
+                    List<userModel> listUser = userModel.find(userModel.class, "email = ?", email);
+
+                    if(!listUser.isEmpty()) {
+                        userModel user = listUser.get(0);
+                        if(user.getPassword().equals(password)){
+                            Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
+                            intent.putExtra("user_email", user.getEmail());
+                            startActivity(intent);
+                            finish();
+                            Toast.makeText(LoginActivity.this, "Successful login.", Toast.LENGTH_SHORT).show();
+                        } else {
+                            Toast.makeText(LoginActivity.this, "Email or Password incorrect.", Toast.LENGTH_SHORT).show();
+                        }
+                    } else {
+                        Toast.makeText(LoginActivity.this, "Email or Password incorrect.", Toast.LENGTH_SHORT).show();
+                    }
+
                 }
             }
         });
@@ -47,6 +64,7 @@ public class LoginActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Intent intent = new Intent(LoginActivity.this, RegisterActivity.class);
                 startActivity(intent);
+                finish();
             }
         });
 
